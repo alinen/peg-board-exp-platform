@@ -1,0 +1,21 @@
+<html>
+<script language="javascript" type="text/javascript" src="https://github.com/processing/p5.js/releases/download/1.2.0/p5.min.js"></script>
+<script language="javascript" type="text/javascript" src="car.js"></script>
+<script language="javascript" type="text/javascript">
+  let car = new Car();
+
+  function setup() {
+      createCanvas(500,500);
+  }
+  function draw() {
+    background(255,0,0)
+  }
+
+  function keyPressed() {
+    car.print();
+    console.log("key press: "+mouseX+ " " +mouseY);
+  }
+</script>
+<body>
+</body>
+</html>
