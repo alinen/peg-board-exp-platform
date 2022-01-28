@@ -2,41 +2,40 @@ class crossyCar {
 
   //how to do constructor() in this case?
 
-  constructor(int x, int y, color f) {
+  constructor(x, y, f) {
     this.mposX = 250;
-    float mposY = 250;
-    float mspeed = random(2,3);
-    float mWidth = 100;
-    float mHeight = 50;
-    color c;
-    mposX = x;
-    mposY = y;
-    c = f;
+    this.mposY = 250;
+    this.mspeed = random(2,3);
+    this.mWidth = 100;
+    this.mHeight = 50;
+    this.mposX = x;
+    this.mposY = y;
+    this.c = f;
   }
-   float x() {
-    return mposX;
-  }
-
-  float y() {
-    return mposY;
+  x() {
+    return this.mposX;
   }
 
-  float width() {
-    return mWidth;
+  y() {
+    return this.mposY;
   }
 
-  float height() {
-    return mHeight;
+  width() {
+    return this.mWidth;
   }
-    boolean inside(float x, float y) {
-      if (x >= mposX && x<= mposX+(0.5*mWidth) &&
-          y >= mposY && y<= mposY+mHeight) {
+
+  height() {
+    return this.mHeight;
+  }
+    inside(x, y) {
+      if (x >= this.mposX && x<= this.mposX+(0.5*this.mWidth) &&
+          y >= this.mposY && y<= this.mposY+this.mHeight) {
             return true;
           }
       return false;
   }
-
-   boolean intersects(Animal other) {
+/*
+   intersects(Animal other) {
       float x = other.x();
       float y = other.y();
       float w = other.width();
@@ -51,19 +50,21 @@ class crossyCar {
               bottomLeftTest || bottomRightTest;
 
   }
+  */
   update() {
-    mposX+= mspeed;
+    this.mposX+= this.mspeed;
   }
   draw() {
     stroke(0);
-    fill(c);
-    rect(mposX, mposY, mWidth, mHeight);
+    fill(this.c);
+    rect(this.mposX, this.mposY, this.mWidth, this.mHeight);
     fill(0);
-    ellipse(mposX-30, mposY-30, 30,20);
-    ellipse(mposX-30, mposY+30, 30,20);
-    ellipse(mposX+30, mposY-30, 30,20);
-    ellipse(mposX+30, mposY+30, 30,20);
-    if(mposX-50 > width || mposX< 0) {
-      mspeed = -mspeed;
+    ellipse(this.mposX-30, this.mposY-30, 30,20);
+    ellipse(this.mposX-30, this.mposY+30, 30,20);
+    ellipse(this.mposX+30, this.mposY-30, 30,20);
+    ellipse(this.mposX+30, this.mposY+30, 30,20);
+    if(this.mposX-50 > width || this.mposX< 0) {
+      this.mspeed = -this.mspeed;
     }
   }
+}

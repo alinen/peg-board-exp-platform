@@ -14,7 +14,7 @@ this.instructions = true;
 this.xCorner = 0;
 this.yCorner = 0;
 this.carTotal = 12;
-this.cars;
+this.cars = null;
 }
 
 
@@ -23,20 +23,24 @@ setup(w, h) {
   this.width = w;
   this.height = h;
   //size(600,700);
+
+  this.cars =
+  [
+    new crossyCar(this.xCorner, this.yCorner + 400, "#293998"),
+    new crossyCar(this.xCorner, this.yCorner + 550, "#5DD3D6")
+  ];
   /*
-  this.cars[0] = new crossyCar(this.xCorner, this.yCorner + 400, #293998);
-  this.cars[1] = new crossyCar(this.xCorner, this.yCorner + 550, #5DD3D6);
-  this.cars[2] = new crossyCar(this.xCorner, this.yCorner + 250, #98295F);
-  this.cars[3] = new crossyCar(this.xCorner, this.yCorner + 100, #512998);
-  this.cars[4] = new crossyCar(this.xCorner, this.yCorner + 400, #98295F);
-  this.cars[5] = new crossyCar(this.xCorner, this.yCorner + 550, #512998);
-  this.cars[6] = new crossyCar(this.xCorner, this.yCorner + 250, #293998);
-  this.cars[7] = new crossyCar(this.xCorner, this.yCorner + 100, #955DD6);
-  this.cars[8] = new crossyCar(this.xCorner, this.yCorner + 400, #512998);
-  this.cars[9] = new crossyCar(this.xCorner, this.yCorner + 550, #98295F);
-  this.cars[10] = new crossyCar(this.xCorner, this.yCorner + 250, #D65DB8);
-  this.cars[11] = new crossyCar(this.xCorner, this.yCorner + 100, #293998);
-  */
+  this.cars[2] = new crossyCar(this.xCorner, this.yCorner + 250, "#98295F");
+  this.cars[3] = new crossyCar(this.xCorner, this.yCorner + 100, "#512998");
+  this.cars[4] = new crossyCar(this.xCorner, this.yCorner + 400, "#98295F");
+  this.cars[5] = new crossyCar(this.xCorner, this.yCorner + 550, "#512998");
+  this.cars[6] = new crossyCar(this.xCorner, this.yCorner + 250, "#293998");
+  this.cars[7] = new crossyCar(this.xCorner, this.yCorner + 100, "#955DD6");
+  this.cars[8] = new crossyCar(this.xCorner, this.yCorner + 400, "#512998");
+  this.cars[9] = new crossyCar(this.xCorner, this.yCorner + 550, "#98295F");
+  this.cars[10] = new crossyCar(this.xCorner, this.yCorner + 250, "#D65DB8");
+  this.cars[11] = new crossyCar(this.xCorner, this.yCorner + 100, "#293998");
+*/
 
   //need to comment out for background to load bc loop is incomplete
   /*
@@ -89,13 +93,16 @@ if (animal1.yPos == 0) {
   rect(this.xCorner, this.yCorner + 6*this.height/9, this.width*2, this.height/9);
   rect(this.xCorner, this.yCorner + 8*this.height/9, this.width*2,this.height/9);
 
-  /*
+
   this.cars[0].update();
   this.cars[1].update();
+  /*
   this.cars[2].update();
   this.cars[3].update();
+  */
   this.cars[0].draw();
   this.cars[1].draw();
+  /*
   this.cars[2].draw();
   this.cars[3].draw();
   */
