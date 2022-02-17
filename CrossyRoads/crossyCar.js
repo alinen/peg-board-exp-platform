@@ -5,7 +5,7 @@ class crossyCar {
   constructor(x, y, f) {
     this.mposX = 250;
     this.mposY = 250;
-    this.mspeed = random(2,3);
+    this.mspeed = random(1,3);
     this.mWidth = 100;
     this.mHeight = 50;
     this.mposX = x;
@@ -35,19 +35,20 @@ class crossyCar {
       return false;
   }
 /*
+
    intersects(Animal other) {
-      float x = other.x();
-      float y = other.y();
-      float w = other.width();
-      float h = other.height();
+      this.x = this.other.x();
+      this.y = this.other.y();
+      this.w = this.other.width();
+      this.h = this.other.height();
 
-      boolean topLeftTest = inside(x, y);
-      boolean topRightTest = inside(x+w,y);
-      boolean bottomLeftTest = inside(x,y+h);
-      boolean bottomRightTest = inside(x+w,y+h);
+      this.topLeftTest = this.inside(this.x, this.y);
+      this.topRightTest = this.inside(this.x+this.w,this.y);
+      this.bottomLeftTest = this.inside(this.x,this.y+this.h);
+      this.bottomRightTest = this.inside(this.x+this.w,this.y+this.h);
 
-      return topLeftTest || topRightTest ||
-              bottomLeftTest || bottomRightTest;
+      return this.topLeftTest || this.topRightTest ||
+              this.bottomLeftTest || this.bottomRightTest;
 
   }
   */

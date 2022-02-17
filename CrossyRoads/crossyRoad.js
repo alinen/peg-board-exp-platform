@@ -2,12 +2,10 @@ class CrossyRoad{
 
 constructor() {
   /*
-this.cars = new crossyCar[12];
 this.timer1 = new crossyTimer();
 this.animal1 = new crossyAnimal(250,650);
-this.morecars = false;
-this.ocars = false;
 */
+
 this.gameon = true;
 this.intersects = false;
 this.instructions = true;
@@ -15,6 +13,8 @@ this.xCorner = 0;
 this.yCorner = 0;
 this.carTotal = 12;
 this.cars = null;
+this.morecars = false;
+this.ocars = false;
 }
 
 
@@ -26,21 +26,20 @@ setup(w, h) {
 
   this.cars =
   [
-    new crossyCar(this.xCorner, this.yCorner + 400, "#293998"),
-    new crossyCar(this.xCorner, this.yCorner + 550, "#5DD3D6")
+    new crossyCar(this.xCorner, this.yCorner + 770, "#293998"),
+    new crossyCar(this.xCorner, this.yCorner + 550, "#5DD3D6"),
+    new crossyCar(this.xCorner, this.yCorner + 330, "#98295F"),
+    new crossyCar(this.xCorner, this.yCorner + 110, "#512998"),
+    new crossyCar(this.xCorner, this.yCorner + 770, "#98295F"),
+    new crossyCar(this.xCorner, this.yCorner + 550, "#512998"),
+    new crossyCar(this.xCorner, this.yCorner + 330, "#293998"),
+    new crossyCar(this.xCorner, this.yCorner + 110, "#955DD6"),
+    new crossyCar(this.xCorner, this.yCorner + 770, "#512998"),
+    new crossyCar(this.xCorner, this.yCorner + 550, "#98295F"),
+    new crossyCar(this.xCorner, this.yCorner + 330, "#D65DB8"),
+    new crossyCar(this.xCorner, this.yCorner + 110, "#293998")
   ];
-  /*
-  this.cars[2] = new crossyCar(this.xCorner, this.yCorner + 250, "#98295F");
-  this.cars[3] = new crossyCar(this.xCorner, this.yCorner + 100, "#512998");
-  this.cars[4] = new crossyCar(this.xCorner, this.yCorner + 400, "#98295F");
-  this.cars[5] = new crossyCar(this.xCorner, this.yCorner + 550, "#512998");
-  this.cars[6] = new crossyCar(this.xCorner, this.yCorner + 250, "#293998");
-  this.cars[7] = new crossyCar(this.xCorner, this.yCorner + 100, "#955DD6");
-  this.cars[8] = new crossyCar(this.xCorner, this.yCorner + 400, "#512998");
-  this.cars[9] = new crossyCar(this.xCorner, this.yCorner + 550, "#98295F");
-  this.cars[10] = new crossyCar(this.xCorner, this.yCorner + 250, "#D65DB8");
-  this.cars[11] = new crossyCar(this.xCorner, this.yCorner + 100, "#293998");
-*/
+
 
   //need to comment out for background to load bc loop is incomplete
   /*
@@ -81,9 +80,9 @@ if (animal1.yPos == 0) {
   fill("#F4F540")
 
   line(this.xCorner, this.yCorner + 1*this.height/9,this.xCorner+this.width,this.yCorner + 1*this.height/9);
+  line(this.xCorner, this.yCorner + 5*this.height/9,this.xCorner+this.width,this.yCorner + 5*this.height/9);
   line(this.xCorner, this.yCorner + 7*this.height/9,this.xCorner+this.width,this.yCorner + 7*this.height/9);
-  line(this.xCorner, this.yCorner + 11*this.height/9,this.xCorner+this.width,this.yCorner + 11*this.height/9);
-  line(this.xCorner, this.yCorner + 15*this.height/9,this.xCorner+this.width,this.yCorner + 15*this.height/9);
+  line(this.xCorner, this.yCorner + 3*this.height/9,this.xCorner+this.width,this.yCorner + 3*this.height/9);
 
   stroke(0);
   fill("#50A53F");
@@ -96,19 +95,19 @@ if (animal1.yPos == 0) {
 
   this.cars[0].update();
   this.cars[1].update();
-  /*
+
   this.cars[2].update();
   this.cars[3].update();
-  */
+
   this.cars[0].draw();
   this.cars[1].draw();
-  /*
+
   this.cars[2].draw();
   this.cars[3].draw();
-  */
+
 
   rectMode(CENTER);
-/*
+
   if (this.morecars == true) {
     this.cars[4].update();
     this.cars[5].update();
@@ -129,7 +128,7 @@ if (animal1.yPos == 0) {
     this.cars[10].draw();
     this.cars[11].draw();
   }
-*/
+
 
 //change cars to array and intialize using for loops
 
