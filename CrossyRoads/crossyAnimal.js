@@ -6,23 +6,23 @@ class crossyAnimal {
   this.mWidth = 40;
   this.mHeight = 40;
   }
-  Animal(float x, float y) {
+  Animal(x, y) {
     this.xPos = x;
     this.yPos = y;
   }
-  float x() {
+  x() {
     return this.xPos;
   }
 
-  float y() {
+  y() {
     return this.yPos;
   }
 
-  float width() {
+  width() {
     return this.mWidth;
   }
 
-  float height() {
+  height() {
     return this.mHeight;
   }
 
