@@ -1,5 +1,5 @@
 // Peg Board Task
-// Aline Normoyle, alinen
+// Aline Normoyle (alinen) and Lola Rodriguez (lrodriguez)
 
 class PegBoard {
 
@@ -12,7 +12,7 @@ class PegBoard {
     this.rotateRate = 0.05; // radians
     this.half = 0;
     this.numPegs = 0;
-    this.selected = {i: 0, j: 0, theta: 0};
+    
     //added
     this.tx = 35;
     this.ty = 35;
@@ -22,9 +22,7 @@ class PegBoard {
     this.iy = 35;
     this.rad = 30;
     this.radi;
-    this.isDragt = false;
-    this.isDragp = false;
-    this.isDragi = false;
+    this.isDragging = false;
     this.pegs;
   }
 
@@ -136,62 +134,31 @@ class PegBoard {
     fill(227, 130, 234)
     ellipse(this.ix, this.iy, 2*this.rad, 2*this.rad);
 
-    if(this.isDragt == true) {
-      fill(6, 132,193);
-      ellipse(mouseX, mouseY, 2*this.rad, 2*this.rad);
-    }
-    if(this.isDragp == true) {
-      fill(161, 130, 234);
-      ellipse(mouseX, mouseY, 2*this.rad, 2*this.rad);
-    }
-    if(this.isDragi == true) {
-      fill(227, 130, 234);
+    if(this.isDragging == true) {
+      fill(this.currentColor);
       ellipse(mouseX, mouseY, 2*this.rad, 2*this.rad);
     }
   };
 
   mouseClicked(x, y) {
-    /*
-    if (this.selected.i != -1) return; // only allow a single click
-
-    let celli = x % this.spacing;
-    let cellj = y % this.spacing;
-    //console.log("here "+mouseX+" "+mouseY+" "+celli+" "+cellj);
-
-    if (dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
-      this.selected.i = floor(x / this.spacing);
-      this.selected.j = floor(y / this.spacing);
-      this.selected.theta = 0;
-    }
-    this.pegs[i][j].clickCount ++;
-
-    let celli = mouseX % this.spacing;
-    let cellj = mouseY % this.spacing;
-    let i = floor(mouseX / this.spacing);
-    let j = floor(mouseY / this.spacing);
-
-    if (dist(celli, cellj, this.half, this.half) < this.pegSize/2 && this.peg[i][j].clickCount < 4) {
-      this.pegs[i][j].clickCount ++;
-    }
-    */
   }
 
 
   //added
   mousePressed() {
+
     if(dist(mouseX, mouseY, this.tx, this.ty) < this.rad){
-      fill(6, 132,193);
-      this.isDragt = true;
+      this.isDragging = true;
       this.currentColor = this.teal;
       console.log("clicked" + mouseX + " " + mouseY);
     }
     if(dist(mouseX, mouseY, this.px, this.py) < this.rad){
-      this.isDragp = true;
+      this.isDragging = true;
       this.currentColor = this.purple;
       console.log("clicked" + mouseX + " " + mouseY);
     }
     if(dist(mouseX, mouseY, this.ix, this.iy) < this.rad){
-      this.isDragi = true;
+      this.isDragging = true;
       this.currentColor = this.pink;
       console.log("clicked" + mouseX + " " + mouseY);
     }
@@ -207,41 +174,23 @@ class PegBoard {
 
     if (dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
       console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
-      this.pegs[i][j].filled = true;
+      if (this.isDragging) {
+        this.pegs[i][j].filled = true;
+      }
       this.pegs[i][j].coloring = this.currentColor;
 
-      if(this.pegs[i][j].clickCount <= 4){
-        this.pegs[i][j].clickCount = this.pegs[i][j].clickCount + 1;
+      if (this.pegs[i][j].filled) {
+        if(this.pegs[i][j].clickCount <= 4){
+          this.pegs[i][j].clickCount = this.pegs[i][j].clickCount + 1;
+        }
+        if(this.pegs[i][j].clickCount > 4) {
+          this.pegs[i][j].clickCount = 4;
+        }
       }
-      if(this.pegs[i][j].clickCount > 4) {
-        this.pegs[i][j].clickCount = 4;
-      }
-/*
-      start color and end color - can blend them
-
-      c = c(start) *1.0 + c(end) *0
-      c = c(start)*0.75 + c(end) *0.25
-      50/50
-      25/75
-      0/100
-
-      c(start) * (1-u) + c(end) *(u)
-
-      u = clickCount / 4.0x
-
-      textAlign(CENTER)
-
-      text("clickCount", x, y)
-      */
-      //if mouse released in cell increase click count as long as click count isnt > max click count
     }
 
-    this.isDragt = false;
-    this.isDragb = false;
-    this.isDragp = false;
-    this.isDragi = false;
-
-}
+    this.isDragging = false;
+  }
 }
 
 /*
@@ -286,4 +235,4 @@ need to keep track of which cells have smooth
     use y coordinate to decide if its street or grass
       i.e if y%200 = 0 make grassy
       keep hard numbers and when u draw add (x,y)
-*/
+      */
