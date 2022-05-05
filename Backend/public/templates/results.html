@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="static/Skeleton-2.0.4/css/normalize.css">
+  <link rel="stylesheet" href="static/Skeleton-2.0.4/css/skeleton.css">
+  <link rel="stylesheet" href="static/Skeleton-2.0.4/css/custom.css">
+</head>
+<body>
+<script>
+function download() {
+  var contents = "";
+  var table = document.getElementById("results");
+  for (var i = 0, row; row = table.rows[i]; i++) {
+    for (var j = 0, col; col = row.cells[j]; j++) {
+      contents += col.innerHTML +",";
+      console.log("TEST"+col.innerHTML);
+    }  
+    contents += "\n";
+  }
+  
+  var blob = new Blob([contents], {type: "text/csv;charset=utf-8"});
+  var a = document.createElement("a");
+  var url = URL.createObjectURL(blob);
+  a.href = url;
+  a.download = "clicks-"+Date()+".csv";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+  }, 0);
+}
+</script>
+<h1>Result Summary</h1>
+
+<input type="button" value="Download" style="background-color:#ffd179" onclick="download()">
+
+<h3>Log</h3>
+{% if lines|length > 0 %}
+<table id="results" class="u-full-width">
+  <tbody>
+    {% for line in lines %}
+    <tr>
+      <td>{{line.pid}}</td>
+      <td>{{line.secs}}</td>
+      <td>{{line.logLine}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No Log</p>
+{% endif %}
+
+
+</body>
+</html> 

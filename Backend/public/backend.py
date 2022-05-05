@@ -61,9 +61,15 @@ def new():
 def thankyou():
   return render_template("thankyou.html") 
 
-@app.route('/download', methods=['GET'])
-def download():
-  return "test,test,test,test\ntest,test,test,test"
+@app.route('/results', methods=['GET'])
+def results():
+  if not ExperimentLog.__table__.exists(db.engine):
+    print "Experiment log is empty"
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+  logLines = ExperimentLog.query.order_by(ExperimentLog.pid, ExperimentLog.secs).all()
+  print(type(logLines), type(logLines[0]))
+  return render_template("results.html", lines = logLines)
 
 @app.route('/log', methods=['PUT','POST'])
 def log():
