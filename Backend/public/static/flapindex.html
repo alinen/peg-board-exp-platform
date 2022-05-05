@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+<script language="javascript" type="text/javascript" src="flapSketch.js"></script>
+<script language="javascript" type="text/javascript" src="flapBird.js"></script>
+<script language="javascript" type="text/javascript" src="pipe.js"></script>
+<script>
+var w = 500.0;
+var h = 500.0;
+var flappybird  = new FlappyBird();
+
+var graphics = function(p) {
+  p.setup = function() { 
+    var canvas = p.createCanvas(500,500); 
+    canvas.parent("FlappyBird"); 
+    flappybird.setup(p);
+  }
+
+  p.mousePressed = function() {
+    flappybird.mousePressed(p);
+  }
+
+  p.mouseReleased = function() {
+    flappybird.mouseReleased(p);
+  }
+
+  p.draw = function() {
+    flappybird.draw(p);
+  }
+};
+new p5(graphics);
+</script>
+</head>
+
+<body>
+<div id="FlappyBird"></div>
+</body>
+</html>
