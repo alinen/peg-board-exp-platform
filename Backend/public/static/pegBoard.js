@@ -26,7 +26,28 @@ class PegBoard {
   }
 
   setup(p, logfn) {
+    this.resize(p);
+
     this.logfn = logfn;
+    this.teal = p.color(6, 132,193);
+    //this.teal2 = p.color(41,107,139);
+    this.black = p.color(0,0,0);
+    this.purple = p.color(161, 130, 234);
+    this.purple2 = p.color(63,34,134);
+    this.pink = p.color(227, 130, 234);
+    this.pink2 = p.color(122, 35, 129);
+    this.currentColor = p.color(255);
+
+    this.pegs = new Array(this.numPegs);
+    for(var i = 0; i < this.pegs.length; i++){
+      this.pegs[i] = new Array(this.numPegs);
+      for(var j =0; j< this.pegs.length; j++){
+        this.pegs[i][j] = new PegCell(p);
+      }
+    }
+  }
+
+  resize(p) {
     this.w = p.width;
     this.h = p.height;
     this.pegSize = 50;
@@ -44,22 +65,6 @@ class PegBoard {
     this.ix = this.half*5;
     this.iy = this.half;
 
-    this.teal = p.color(6, 132,193);
-    //this.teal2 = p.color(41,107,139);
-    this.black = p.color(0,0,0);
-    this.purple = p.color(161, 130, 234);
-    this.purple2 = p.color(63,34,134);
-    this.pink = p.color(227, 130, 234);
-    this.pink2 = p.color(122, 35, 129);
-    this.currentColor = p.color(255);
-
-    this.pegs = new Array(this.numPegs);
-    for(var i = 0; i < this.pegs.length; i++){
-      this.pegs[i] = new Array(this.numPegs);
-      for(var j =0; j< this.pegs.length; j++){
-        this.pegs[i][j] = new PegCell(p);
-      }
-    }
   }
 
   draw(p) {
@@ -158,15 +163,15 @@ class PegBoard {
     let j = p.floor(p.mouseY / this.spacing);
 
     if (p.dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
-      //console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
+      console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
       if (this.isDragging) {
         this.pegs[i][j].filled = true;
       }
       this.pegs[i][j].coloring = this.currentColor;
 
       if (this.pegs[i][j].filled) {
-        if (this.logfn) {
-          this.logfn(p, "PegBoard,pegdrop,"+i+","+j);
+        if (this.logfn && this.pegs[i][j].clickCount == 0) {
+          this.logfn("PegBoard,pegdrop,"+i+","+j);
         }
 
         if(this.pegs[i][j].clickCount < 4){
@@ -174,7 +179,7 @@ class PegBoard {
         }
         if(this.pegs[i][j].clickCount == 4) {
           if (this.logfn) {
-            this.logfn(p, "PegBoard,peglock,"+i+","+j);
+            this.logfn("PegBoard,peglock,"+i+","+j);
           }
         }
       }

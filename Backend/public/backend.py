@@ -57,6 +57,14 @@ def new():
 
   return render_template("PegExperiment.html", experiment_pid=user.id) 
 
+@app.route('/thankyou', methods=['GET'])
+def thankyou():
+  return render_template("thankyou.html") 
+
+@app.route('/download', methods=['GET'])
+def download():
+  return "test,test,test,test\ntest,test,test,test"
+
 @app.route('/log', methods=['PUT','POST'])
 def log():
   print(request.json)
