@@ -1,0 +1,101 @@
+
+<html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Intro</title>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/addons/p5.sound.min.js"></script>
+<script src="https://unpkg.com/matter-js@0.14.2/build/matter.min.js"></script>
+<style>
+.float-container {
+    border: none;
+    padding: 2px;
+    display: flex;
+}
+
+.float-child {
+    width: 50%;
+    float: left;
+    padding: 2px;
+    border: 1px solid black;
+} 
+</style>
+<body>
+
+<script language="javascript" type="text/javascript">
+
+function logdb(message, timeSeconds) {
+  console.log(message)
+  let data = {pid: 1, time: timeSeconds, logLine: message};
+
+  fetch("/log", {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'}, 
+    body: JSON.stringify(data)
+    }).then(res => {
+      console.log("Request complete! response:", res);
+  });
+}
+
+var PegBoard = function (p) {
+  p.setup = function () {
+    let box = document.querySelector('#PegBoard');
+    let size = box.offsetWidth;
+    var canvas = p.createCanvas(size, size);
+    canvas.parent('PegBoard');
+  };
+
+  p.draw = function () {
+    p.background(200);
+    p.rect(p.width/2-100, p.height/2-100, 200, 200);
+  };
+
+  p.windowResized = function () {
+    let box = document.querySelector('#PegBoard');
+    let size = box.offsetWidth;
+    p.resizeCanvas(size, size);
+  }
+
+  p.mousePressed = function () {
+    logdb("PegBoard: "+p.mouseX+" "+p.mouseY, p.millis()/1000);
+  };
+};
+
+var Game = function (p) {
+  p.setup = function () {
+    let box = document.querySelector('#Game');
+    let size = box.offsetWidth;
+    var canvas = p.createCanvas(size, size);
+    canvas.parent('Game');
+    canvas.style('display', 'block');
+  };
+
+  p.draw = function () {
+    p.background(100);
+    p.ellipse(p.width/2-100, p.height/2-100, 200, 200);
+  };
+
+  p.windowResized = function () {
+    let box = document.querySelector('#Game');
+    let size = box.offsetWidth;
+    p.resizeCanvas(size, size);
+  }
+
+  p.mousePressed = function () {
+    logdb("GAME: "+p.mouseX+" "+p.mouseY, p.millis()/1000);
+  };
+};
+
+new p5(PegBoard);
+new p5(Game);
+</script>
+
+<script>
+
+</script>
+
+<div class="float-container">
+  <div class="float-child"> <div id="PegBoard"></div></div>
+  <div class="float-child"> <div id="Game"></div></div>
+</div>
+</body>
+</html>

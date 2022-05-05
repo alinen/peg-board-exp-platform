@@ -55,7 +55,7 @@ def new():
   db.session.add(user)
   db.session.commit()
 
-  return "Hello, "+str(user)
+  return render_template("ExperimentPOC.html") #"Hello, "+str(user)
 
 @app.route('/log', methods=['PUT','POST'])
 def log():
