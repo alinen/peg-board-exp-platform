@@ -26,41 +26,16 @@
     border: 1px solid black;
 } 
 </style>
+
 <body>
 
 <script language="javascript" type="text/javascript">
-var participantid = {{experiment_pid|safe}};
-var timeStart = Date.now();
-
-function logdb(message) {
-  console.log(message)
-  let timeNow = Date.now();
-  let timeSeconds =  (timeNow - timeStart)/ 1000;
-  let data = {pid: participantid, time: timeSeconds, logLine: message};
-
-  fetch("/log", {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'}, 
-    body: JSON.stringify(data)
-    }).then(res => {
-      //console.log("Request complete! response:", res);
-  });
-}
-
 function playAudio(audio){
   return new Promise(res=>{
     audio.play()
     audio.onended = res
   });
 }
-
-async function playMusic(){
-  var music = new Audio('static/Alarm05.wav');
-  await playAudio(music);
-  logdb("ExperimentComplete");
-  window.location.href = "/thankyou";
-}
-
 
 function p5size(p, name) {
   let box = document.querySelector('#'+name);
@@ -72,13 +47,11 @@ function p5setup(p, name) {
   let size = p5size(p, name);
   var canvas = p.createCanvas(size, size);
   canvas.parent(name);
-  logdb(name+",start,"+size);
 }
 
 function p5resize(p, name) {
   let size = p5size(p, name);
   p.resizeCanvas(size, size);
-  logdb(name+",resize,"+size);
 }
 
 function p5inCanvas(p) {
@@ -93,7 +66,7 @@ var flappybird  = new FlappyBird();
 var PegBoardCanvas = function (p) {
   p.setup = function () { 
     p5setup(p, 'PegBoard'); 
-    pegBoardGame.setup(p, logdb); 
+    pegBoardGame.setup(p);
   };
 
   p.windowResized = function () { 
@@ -108,7 +81,6 @@ var PegBoardCanvas = function (p) {
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
-      logdb("PegBoard,pressed,"+p.mouseX+","+p.mouseY);
       pegBoardGame.mouseReleased(p); 
     }
   };
@@ -136,7 +108,6 @@ var GameCanvas = function (p) {
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
-      logdb("PegBoard,pressed,"+p.mouseX+","+p.mouseY);
       flappybird.mouseReleased(p); 
     }
   };
