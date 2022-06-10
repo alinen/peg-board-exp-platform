@@ -55,7 +55,7 @@ function p5resize(p, name) {
 }
 
 function p5inCanvas(p) {
-  let inX = p.mouseX >= 0 && p.mouseY < p.width;
+  let inX = p.mouseX >= 0 && p.mouseX < p.width;
   let inY = p.mouseY >= 0 && p.mouseY < p.height;
   return inX && inY;
 }

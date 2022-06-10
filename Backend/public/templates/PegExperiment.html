@@ -55,9 +55,9 @@ function playAudio(audio){
 }
 
 async function playMusic(){
+  logdb("ExperimentComplete");
   var music = new Audio('static/Alarm05.wav');
   await playAudio(music);
-  logdb("ExperimentComplete");
   window.location.href = "/thankyou";
 }
 
@@ -82,7 +82,7 @@ function p5resize(p, name) {
 }
 
 function p5inCanvas(p) {
-  let inX = p.mouseX >= 0 && p.mouseY < p.width;
+  let inX = p.mouseX >= 0 && p.mouseX < p.width;
   let inY = p.mouseY >= 0 && p.mouseY < p.height;
   return inX && inY;
 }
@@ -136,7 +136,7 @@ var GameCanvas = function (p) {
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
-      logdb("PegBoard,pressed,"+p.mouseX+","+p.mouseY);
+      logdb("Game,pressed,"+p.mouseX+","+p.mouseY);
       flappybird.mouseReleased(p); 
     }
   };
