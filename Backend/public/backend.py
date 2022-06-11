@@ -67,9 +67,15 @@ def results():
     print "Experiment log is empty"
     return make_response(jsonify({'error': 'Not found'}), 404)
 
-  logLines = ExperimentLog.query.order_by(ExperimentLog.pid, ExperimentLog.secs).all()
-  print(type(logLines), type(logLines[0]))
-  return render_template("results.html", lines = logLines)
+  participants = Participant.query.all()
+  lines = []
+  for p in participants:
+    logLines = ExperimentLog.query.filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
+    lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
+
+  #logLines = ExperimentLog.query.order_by(ExperimentLog.pid, ExperimentLog.secs).all()
+  #print(type(logLines), type(logLines[0]))
+  return render_template("results.html", lines = lines)
 
 @app.route('/log', methods=['PUT','POST'])
 def log():

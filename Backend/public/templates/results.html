@@ -14,8 +14,7 @@ function download() {
   var table = document.getElementById("results");
   for (var i = 0, row; row = table.rows[i]; i++) {
     for (var j = 0, col; col = row.cells[j]; j++) {
-      contents += col.innerHTML +",";
-      console.log("TEST"+col.innerHTML);
+      contents += col.innerHTML.replaceAll(" ","-") +",";
     }  
     contents += "\n";
   }
@@ -41,11 +40,13 @@ function download() {
 {% if lines|length > 0 %}
 <table id="results" class="u-full-width">
   <tbody>
-    {% for line in lines %}
+    {% for name,created,pid,secs,line in lines %}
     <tr>
-      <td>{{line.pid}}</td>
-      <td>{{line.secs}}</td>
-      <td>{{line.logLine}}</td>
+      <td>{{pid}}</td>
+      <td>{{name}}</td>
+      <td>{{created}}</td>
+      <td>{{secs}}</td>
+      <td>{{line}}</td>
     </tr>
     {% endfor %}
   </tbody>
