@@ -14,9 +14,11 @@
 
 <form action="new" method="post">
   <label for="expid">Participant ID:</label><br>
-  <input type="text" id="expid" name="expid"><br>
+  <input type="text" id="expid" name="expid" pattern="^[a-zA-Z0-9_]*"><br>
   <input type="submit" value="Start Experiment" id="start">
 </form> 
+
+<p>NOTE: Participant IDs can contain letters, numbers, and underscores.</p>
 
 </body>
 </html> 
