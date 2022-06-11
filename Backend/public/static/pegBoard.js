@@ -204,10 +204,10 @@ class PegBoard {
 
     if (p.dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
       console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
-      if (this.isDragging) {
+      if (this.isDragging && !this.pegs[i][j].filled) {
         this.pegs[i][j].filled = true;
+        this.pegs[i][j].coloring = this.currentColor;
       }
-      this.pegs[i][j].coloring = this.currentColor;
 
       if (this.pegs[i][j].filled) {
         if (this.logfn && this.pegs[i][j].clickCount == 0) {

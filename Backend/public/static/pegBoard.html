@@ -15,12 +15,17 @@ var graphics = function(p) {
     pegBoard.setup(p);
   }
 
+
   p.mousePressed = function() {
     pegBoard.mousePressed(p);
   }
 
   p.mouseReleased = function() {
     pegBoard.mouseReleased(p);
+  }
+
+  p.touchStarted = function() {
+    pegBoard.mousePressed(p);
   }
 
   p.draw = function() {
