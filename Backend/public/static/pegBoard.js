@@ -6,12 +6,13 @@ class PegBoard {
   constructor() {
     this.w = 0;
     this.h = 0;
-    this.wantPegs = 15;
-    this.spacing = this.w/this.wantPegs;
+    this.numPegs = 0;
+    this.spacing = this.w/this.numPegs;
     this.pegSize = 50;
     this.half = 0;
-    this.numPegs = 0;
     this.logfn = null
+    this.doClear = false;
+    this.clearTimer = 0;
 
     //added
     this.tx = 35;
@@ -51,10 +52,9 @@ class PegBoard {
     this.w = p.width;
     this.h = p.height;
     this.pegSize = 50;
-    this.wantPegs = 15;
-    this.spacing = this.w/this.wantPegs;
+    this.numPegs = 15;
+    this.spacing = this.w/this.numPegs;
     this.half = this.spacing * 0.5;
-    this.numPegs = p.floor(this.w / this.spacing) + 1;
 
     //added
     this.rad = 0.95*(this.spacing/2);
@@ -67,25 +67,8 @@ class PegBoard {
 
   }
 
-  draw(p) {
-
-    p.noStroke();
-    p.fill("#fff8dc");
-    p.rectMode(p.CORNER);
-    p.rect(0, 0, this.w, this.h);
-
-
-    p.fill("#bc8f8f");
-    for (let i = 0; i < this.numPegs; i++) {
-      for (let j = 0; j < this.numPegs; j++) {
-        let x = this.half + this.spacing * i;
-        let y = this.half + this.spacing * j;
-
-        p.ellipse(x, y, 10,10);
-      }
-    }
-
-    //added
+  drawPegs(p) {
+    var total = 0;
     for(let i = 0; i < this.numPegs; i++){
       for(let j = 0; j < this.numPegs; j++) {
         if(this.pegs[i][j].filled == true){
@@ -106,15 +89,23 @@ class PegBoard {
 
           p.fill(coloring);
 
+          if (this.pegs[i][j].clickCount == 4) total++;
           var factor = (5 - this.pegs[i][j].clickCount)/4;
           var radi = this.rad * factor;
           p.ellipse(x, y, 2*radi, 2*radi);
-          p.fill(0,0,0);
-          p.textAlign(p.CENTER);
         }
       }
     }
-    //added
+
+    if (total == this.numPegs*this.numPegs - 3 ) {
+      console.log("COMPLETE!!!!");
+      this.doClear = true;
+      this.clearTimer = p.millis();
+    }
+
+  }
+
+  drawPalette(p) {
     p.rectMode(p.CORNER);
     p.fill("#fff8dc");
     p.rect(0,0,this.rad*6,this.rad*2);
@@ -131,6 +122,55 @@ class PegBoard {
     if(this.isDragging == true) {
       p.fill(this.currentColor);
       p.ellipse(p.mouseX, p.mouseY, 2*this.rad, 2*this.rad);
+    }
+
+  }
+
+  drawClear(p) {
+    var factor = (p.millis() - this.clearTimer)/3000.0 + 0.1;
+    var radi = this.rad * factor;
+    var c = p.lerpColor(p.color(0), p.color("#fff8dc"), factor/2.0);
+    console.log(c);
+    p.fill(c);
+    for(let i = 0; i < this.numPegs; i++){
+      for(let j = 0; j < this.numPegs; j++) {
+        this.pegs[i][j].filled = false; 
+        this.pegs[i][j].clickCount = 0; 
+        let x = this.half + this.spacing * i;
+        let y = this.half + this.spacing * j;
+        p.ellipse(x, y, 2*radi, 2*radi);
+      }
+    }
+
+    if (factor > 2) {
+      this.doClear = false;
+    }
+
+  }
+
+  draw(p) {
+
+    p.noStroke();
+    p.fill("#fff8dc");
+    p.rectMode(p.CORNER);
+    p.rect(0, 0, this.w, this.h);
+
+    p.fill("#bc8f8f");
+    for (let i = 0; i < this.numPegs; i++) {
+      for (let j = 0; j < this.numPegs; j++) {
+        let x = this.half + this.spacing * i;
+        let y = this.half + this.spacing * j;
+
+        p.ellipse(x, y, 10,10);
+      }
+    }
+
+    if (this.doClear) {
+      this.drawClear(p);
+
+    } else {
+      this.drawPegs(p);
+      this.drawPalette(p); 
     }
   };
 
