@@ -3,42 +3,48 @@
 // http://patreon.com/codingtrain
 // Code for: https://youtu.be/cXgA1d_E-jY&
 
-var bird;
-var pipes = [];
+class FlappyBird {
 
-function setup() {
-  createCanvas(640, 480);
-  bird = new flapBird();
-  pipes.push(new Pipe());
-}
+  constructor() {
+    this.w = 0;
+    this.h = 0;
+    this.bird = null;
+    this.pipes = [];
+  }
 
-function draw() {
-  background(0);
+  setup(p) {
+    this.w = p.width;
+    this.h = p.height;
+    this.bird = new flapBird(p);
+    this.pipes = [];
+    this.pipes.push(new Pipe(p));
+  }
 
-  for (var i = pipes.length - 1; i >= 0; i--) {
-    pipes[i].show();
-    pipes[i].update();
+  draw(p) {
+    p.background(0);
 
-    if (pipes[i].hits(bird)) {
-      console.log('HIT');
+    for (var i = this.pipes.length - 1; i >= 0; i--) {
+      this.pipes[i].show(p);
+      this.pipes[i].update(p);
+      this.pipes[i].hits(p, this.bird);
+
+      if (this.pipes[i].offscreen()) {
+        this.pipes.splice(i, 1);
+      }
     }
 
-    if (pipes[i].offscreen()) {
-      pipes.splice(i, 1);
+    this.bird.update(p);
+    this.bird.show(p);
+
+    if (p.frameCount % 75 == 0) {
+      this.pipes.push(new Pipe(p));
     }
   }
 
-  bird.update();
-  bird.show();
-
-  if (frameCount % 75 == 0) {
-    pipes.push(new Pipe());
+  mousePressed(p) {
+    this.bird.up(p);
   }
-}
 
-function keyPressed() {
-  if (key == ' ') {
-    bird.up();
-    //console.log("SPACE");
+  mouseReleased(p) {
   }
 }
