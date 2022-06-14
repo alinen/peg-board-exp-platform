@@ -9,9 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
 <script src="Backend/public/static/pegCell.js"></script>
 <script src="Backend/public/static/pegBoard.js"></script>
-<script language="javascript" type="text/javascript" src="Backend/public/static/flapSketch.js"></script>
-<script language="javascript" type="text/javascript" src="Backend/public/static/flapBird.js"></script>
-<script language="javascript" type="text/javascript" src="Backend/public/static/pipe.js"></script>
+<script language="javascript" type="text/javascript" src="Backend/public/static/flappySketch.js"></script>
+<script language="javascript" type="text/javascript" src="Backend/public/static/flappyPlayer.js"></script>
+<script language="javascript" type="text/javascript" src="Backend/public/static/flappyPipe.js"></script>
 <style>
 .float-container {
     border: none;
@@ -61,7 +61,7 @@ function p5inCanvas(p) {
 }
 
 var pegBoardGame = new PegBoard();
-var flappybird  = new FlappyBird();
+var game  = new Runner();
 
 var PegBoardCanvas = function (p) {
   p.setup = function () { 
@@ -93,7 +93,7 @@ var PegBoardCanvas = function (p) {
 var GameCanvas = function (p) {
   p.setup = function () { 
     p5setup(p, 'Game'); 
-    flappybird.setup(p);
+    game.setup(p);
   };
 
   p.windowResized = function () { 
@@ -102,18 +102,18 @@ var GameCanvas = function (p) {
 
   p.mousePressed = function () { 
     if (p5inCanvas(p)) {
-      flappybird.mousePressed(p);
+      game.mousePressed(p);
     }
   };
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
-      flappybird.mouseReleased(p); 
+      game.mouseReleased(p); 
     }
   };
 
   p.draw = function () {
-    flappybird.draw(p);
+    game.draw(p);
   };
 };
 

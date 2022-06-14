@@ -13,7 +13,7 @@ class Runner {
     this.w = p.width;
     this.h = p.height;
     this.player = new Player(p);
-    var numPipes = Math.floor(this.w / 175);
+    var numPipes = 20;
     this.pipes = [];
     for(var i = 0; i < numPipes; i++) {
       this.pipes.push(new Pipe(p, i * (80+175))); 

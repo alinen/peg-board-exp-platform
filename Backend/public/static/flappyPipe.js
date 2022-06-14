@@ -3,15 +3,14 @@
 class Pipe {
 
   constructor(p, start) {
-    this.reset(p);
-    this.x += start;
+    this.reset(p, start);
   }
 
-  reset(p) {
+  reset(p, start) {
     this.spacing = 175;
     this.top = p.random(p.height / 6, (3 / 4) * p.height);
     this.bottom = p.height - (this.top + this.spacing);
-    this.x = p.width;
+    this.x = p.width + start;
     this.w = 80;
     this.speed = 100;
   }
@@ -35,6 +34,7 @@ class Pipe {
     // position is center bottom
     p.rect(this.x, 0, this.w, this.top);
     p.rect(this.x, p.height - this.bottom, this.w, this.bottom);
+    console.log(this.x);
   }
 
   update(p) {
