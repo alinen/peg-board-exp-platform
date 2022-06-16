@@ -85,6 +85,12 @@ var PegBoardCanvas = function (p) {
     }
   };
 
+  p.touchStarted = function() {
+    if (p5inCanvas(p)) {
+      pegBoardGame.mousePressed(p);
+    }
+  }
+
   p.draw = function () {
     pegBoardGame.draw(p); 
   };
@@ -105,6 +111,12 @@ var GameCanvas = function (p) {
       game.mousePressed(p);
     }
   };
+
+  p.touchStarted = function() {
+    if (p5inCanvas(p)) {
+      game.mousePressed(p);
+    }
+  }
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
