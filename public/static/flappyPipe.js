@@ -7,7 +7,7 @@ class Pipe {
   }
 
   reset(p, start) {
-    this.spacing = 175;
+    this.spacing = 275;
     this.top = p.random(p.height / 6, (3 / 4) * p.height);
     this.bottom = p.height - (this.top + this.spacing);
     this.x = p.width + start;
