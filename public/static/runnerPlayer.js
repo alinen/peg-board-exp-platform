@@ -7,8 +7,8 @@ class Player {
     this.x = 64;
     this.r = 16;
 
-    this.gravity = 100;
-    this.lift = -50;
+    this.gravity = 500;
+    this.lift = -300;
     this.velocity = 0;
   }
 
@@ -18,7 +18,9 @@ class Player {
   }
 
   up(p) {
-    this.velocity += this.lift;
+    if (this.y >= p.height - this.r - 5) { // 5 is a wiggle-room threshold
+      this.velocity = this.lift;
+    }
   }
 
   update(p) {
@@ -28,11 +30,6 @@ class Player {
 
     if (this.y+this.r > p.height) {
       this.y = p.height - this.r;
-      this.velocity = 0;
-    }
-
-    if (this.y-this.r < 0) {
-      this.y = this.r;
       this.velocity = 0;
     }
   }

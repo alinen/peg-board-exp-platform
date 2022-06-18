@@ -13,10 +13,12 @@ class Runner {
     this.w = p.width;
     this.h = p.height;
     this.player = new Player(p);
-    var numPipes = 20;
+    var numPipes = 3;
     this.pipes = [];
+    var start = p.width / 2;
     for(var i = 0; i < numPipes; i++) {
-      this.pipes.push(new Pipe(p, i * (80+175))); 
+      this.pipes.push(new Pipe(p, start)); 
+      start += 40 + p.random(100,200); 
     }
   }
 
@@ -27,10 +29,6 @@ class Runner {
       this.pipes[i].draw(p);
       this.pipes[i].update(p);
       this.pipes[i].hits(p, this.player);
-
-      if (this.pipes[i].offscreen(p)) {
-        this.pipes[i].reset(p);
-      }
     }
 
     this.player.update(p);

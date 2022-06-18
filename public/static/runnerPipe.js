@@ -7,16 +7,14 @@ class Pipe {
   }
 
   reset(p, start) {
-    this.spacing = 175;
-    this.top = p.random(p.height / 6, (3 / 4) * p.height);
-    this.bottom = p.height - (this.top + this.spacing);
-    this.x = p.width + start;
-    this.w = 80;
+    this.bottom = p.random(25, 75);
+    this.x = start;
+    this.w = 40;
     this.speed = 120;
   }
 
   hits(p, player) {
-    if (player.y-player.r < this.top || player.y+player.r > p.height - this.bottom) {
+    if (player.y-player.r > p.height - this.bottom) {
       if (player.x+player.r > this.x && player.x-player.r < this.x + this.w) {
         this.highlight = true;
         return true;
@@ -32,12 +30,14 @@ class Pipe {
       p.fill(255, 0, 0);
     }
     // position is center bottom
-    p.rect(this.x, 0, this.w, this.top);
     p.rect(this.x, p.height - this.bottom, this.w, this.bottom);
   }
 
   update(p) {
     this.x -= this.speed * p.deltaTime / 1000.0;
+    if (this.offscreen()) {
+      this.x = p.width;
+    }
   }
 
   offscreen() {
