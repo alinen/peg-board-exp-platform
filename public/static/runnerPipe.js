@@ -14,7 +14,7 @@ class Pipe {
   }
 
   hits(p, player) {
-    if (player.y-player.r > p.height - this.bottom) {
+    if (player.y+player.r > p.height - this.bottom) {
       if (player.x+player.r > this.x && player.x-player.r < this.x + this.w) {
         this.highlight = true;
         return true;
@@ -35,9 +35,6 @@ class Pipe {
 
   update(p) {
     this.x -= this.speed * p.deltaTime / 1000.0;
-    if (this.offscreen()) {
-      this.x = p.width;
-    }
   }
 
   offscreen() {

@@ -4,13 +4,14 @@ class Pipe {
 
   constructor(p, start) {
     this.reset(p, start);
+    this.style = 0;
   }
 
   reset(p, start) {
     this.spacing = 275;
     this.top = p.random(p.height / 6, (3 / 4) * p.height);
     this.bottom = p.height - (this.top + this.spacing);
-    this.x = p.width + start;
+    this.x = start;
     this.w = 80;
     this.speed = 100;
   }
@@ -27,14 +28,31 @@ class Pipe {
   }
 
   draw(p) {
-    p.fill(255);
+    
+    if (this.style) {
+      this.drawPipe(p);
+
+    } else { // poc 
+      p.fill(255);
+      if (this.highlight) {
+        p.fill(255, 0, 0);
+      }
+      // position is center bottom
+      p.rect(this.x, 0, this.w, this.top);
+      p.rect(this.x, p.height - this.bottom, this.w, this.bottom);
+    }
+  }
+
+  drawPipe(p) {
+    p.stroke(0);
+    p.fill("#008000");
     if (this.highlight) {
       p.fill(255, 0, 0);
     }
     // position is center bottom
     p.rect(this.x, 0, this.w, this.top);
     p.rect(this.x, p.height - this.bottom, this.w, this.bottom);
-    console.log(this.x);
+
   }
 
   update(p) {

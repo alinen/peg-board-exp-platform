@@ -1,6 +1,6 @@
 // alinen, 2022
 
-class Runner {
+class Swimmer {
 
   constructor() {
     this.w = 0;
@@ -13,11 +13,9 @@ class Runner {
     this.w = p.width;
     this.h = p.height;
     this.player = new Player(p);
-    var numPipes = Math.floor(this.w / 300);
     this.pipes = [];
-    for(var i = 0; i < numPipes; i++) {
-      this.pipes.push(new Pipe(p, i * (80+300))); 
-    }
+    this.pipes.push(new Pipe(p, p.width * 0.75)); 
+    this.spawn = Math.floor(p.frameCount + p.random(60, 150));
   }
 
   draw(p) {
@@ -29,12 +27,17 @@ class Runner {
       this.pipes[i].hits(p, this.player);
 
       if (this.pipes[i].offscreen(p)) {
-        this.pipes[i].reset(p, i * (80 + 300));
+        this.pipes.splice(i,1);
       }
     }
 
     this.player.update(p);
     this.player.draw(p);
+
+    if (p.frameCount == this.spawn) {
+      this.spawn = Math.floor(p.frameCount + p.random(175, 250));
+      this.pipes.push(new Pipe(p, p.width));
+    }
   }
 
   mousePressed(p) {

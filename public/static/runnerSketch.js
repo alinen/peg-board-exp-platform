@@ -1,4 +1,5 @@
 // alinen, 2022
+fmod = function (a,b) { return Number((a - (Math.floor(a / b) * b)).toPrecision(8)); };
 
 class Runner {
 
@@ -13,13 +14,10 @@ class Runner {
     this.w = p.width;
     this.h = p.height;
     this.player = new Player(p);
-    var numPipes = 3;
     this.pipes = [];
     var start = p.width / 2;
-    for(var i = 0; i < numPipes; i++) {
-      this.pipes.push(new Pipe(p, start)); 
-      start += 40 + p.random(100,200); 
-    }
+    this.pipes.push(new Pipe(p, start)); 
+    this.spawn = Math.floor(p.frameCount + p.random(60, 150));
   }
 
   draw(p) {
@@ -29,10 +27,19 @@ class Runner {
       this.pipes[i].draw(p);
       this.pipes[i].update(p);
       this.pipes[i].hits(p, this.player);
+
+      if (this.pipes[i].offscreen()) {
+        this.pipes.splice(i, 1);
+      }
     }
 
     this.player.update(p);
     this.player.draw(p);
+
+    if (p.frameCount == this.spawn) {
+      this.spawn = Math.floor(p.frameCount + p.random(75, 155));
+      this.pipes.push(new Pipe(p, p.width));
+    }
   }
 
   mousePressed(p) {
