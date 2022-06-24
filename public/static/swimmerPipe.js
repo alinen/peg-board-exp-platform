@@ -4,7 +4,7 @@ class Pipe {
 
   constructor(p, start) {
     this.reset(p, start);
-    this.style = 0;
+    this.style = 1;
   }
 
   reset(p, start) {
@@ -17,8 +17,9 @@ class Pipe {
   }
 
   hits(p, player) {
-    if (player.y-player.r < this.top || player.y+player.r > p.height - this.bottom) {
-      if (player.x+player.r > this.x && player.x-player.r < this.x + this.w) {
+    var r = player.radius();
+    if (player.y-r < this.top || player.y+r > p.height - this.bottom) {
+      if (player.x+r > this.x && player.x-r < this.x + this.w) {
         this.highlight = true;
         return true;
       }
@@ -47,12 +48,37 @@ class Pipe {
     p.stroke(0);
     p.fill("#008000");
     if (this.highlight) {
+      p.fill(200, 0, 0);
+    }
+    var lidSize = 50;
+    p.rect(this.x+5, 0, this.w-10, this.top); // top
+    p.rect(this.x, this.top-lidSize, this.w, lidSize, 5, 5); // top
+    p.rect(this.x+5, p.height - this.bottom, this.w-10, this.bottom); //bottom
+    p.rect(this.x, p.height - this.bottom, this.w, lidSize, 5, 5); // bottom
+
+    p.noStroke();
+    p.fill("#00f000");
+    if (this.highlight) {
       p.fill(255, 0, 0);
     }
-    // position is center bottom
-    p.rect(this.x, 0, this.w, this.top);
-    p.rect(this.x, p.height - this.bottom, this.w, this.bottom);
+    p.rect(this.x+10, 0, 15, this.top); // top
+    p.rect(this.x+12, this.top-lidSize, 15, lidSize, 5, 5); // top
+    p.rect(this.x+10, p.height - this.bottom, 15, this.bottom); //bottom
+    p.rect(this.x+12, p.height - this.bottom, 15, lidSize, 5, 5); // bottom
 
+    p.fill("#004000");
+    if (this.highlight) {
+      p.fill(100, 0, 0);
+    }
+    p.rect(this.x+this.w-15, 0, 10, this.top-lidSize); // top
+    p.rect(this.x+this.w-10, this.top-lidSize, 10, lidSize, 5, 5); // top
+    p.rect(this.x+this.w-15, p.height - this.bottom + lidSize, 10, this.bottom); //bottom
+    p.rect(this.x+this.w-10, p.height - this.bottom, 10, lidSize, 5, 5); // bottom
+
+    p.stroke(0);
+    p.noFill();
+    p.rect(this.x, this.top-lidSize, this.w, lidSize, 5, 5); // top
+    p.rect(this.x, p.height - this.bottom, this.w, lidSize, 5, 5); // bottom
   }
 
   update(p) {
