@@ -9,10 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
 <script src="static/pegCell.js"></script>
 <script src="static/pegBoard.js"></script>
-<script language="javascript" type="text/javascript" src="static/swimmerSketch.js"></script>
-<script language="javascript" type="text/javascript" src="static/swimmerPlayer.js"></script>
-<script language="javascript" type="text/javascript" src="static/swimmerPipe.js"></script>
-<script language="javascript" type="text/javascript" src="static/swimmerStar.js"></script>
 <style>
 .float-container {
     border: none;
@@ -30,24 +26,6 @@
 <body>
 
 <script language="javascript" type="text/javascript">
-var participantid = {{experiment_pid|safe}};
-var timeStart = Date.now();
-
-function logdb(message) {
-  console.log(message)
-  let timeNow = Date.now();
-  let timeSeconds =  (timeNow - timeStart)/ 1000;
-  let data = {pid: participantid, time: timeSeconds, logLine: message};
-
-  fetch("/log", {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'}, 
-    body: JSON.stringify(data)
-    }).then(res => {
-      //console.log("Request complete! response:", res);
-  });
-}
-
 function playAudio(audio){
   return new Promise(res=>{
     audio.play()
@@ -56,13 +34,10 @@ function playAudio(audio){
 }
 
 async function playMusic(button){
-  logdb("ExperimentComplete");
-  button.value = "Experiment complete!";
+  button.value = "Tutorial complete!";
   var music = new Audio('static/Alarm05.wav');
   await playAudio(music);
-  window.location.href = "/thankyou";
 }
-
 
 function p5size(p, name) {
   let box = document.querySelector('#'+name);
@@ -74,13 +49,11 @@ function p5setup(p, name) {
   let size = p5size(p, name);
   var canvas = p.createCanvas(size, size);
   canvas.parent(name);
-  logdb(name+",start,"+size);
 }
 
 function p5resize(p, name) {
   let size = p5size(p, name);
   p.resizeCanvas(size, size);
-  logdb(name+",resize,"+size);
 }
 
 function p5inCanvas(p) {
@@ -90,16 +63,15 @@ function p5inCanvas(p) {
 }
 
 var pegBoardGame = new PegBoard();
-var swimmer  = new Swimmer();
 
 var PegBoardCanvas = function (p) {
   p.setup = function () { 
-    p5setup(p, 'PegBoard'); 
-    pegBoardGame.setup(p, 15, logdb); 
+    p5setup(p, 'PegBoardTutorial'); 
+    pegBoardGame.setup(p); 
   };
 
   p.windowResized = function () { 
-    p5resize(p, 'PegBoard'); 
+    p5resize(p, 'PegBoardTutorial'); 
   };
 
   p.mousePressed = function () { 
@@ -110,7 +82,6 @@ var PegBoardCanvas = function (p) {
 
   p.mouseReleased = function () { 
     if (p5inCanvas(p)) {
-      logdb("PegBoard,pressed,"+p.mouseX+","+p.mouseY);
       pegBoardGame.mouseReleased(p); 
     }
   };
@@ -120,43 +91,14 @@ var PegBoardCanvas = function (p) {
   };
 };
 
-var GameCanvas = function (p) {
-  p.setup = function () { 
-    p5setup(p, 'Game'); 
-    swimmer.setup(p);
-  };
-
-  p.windowResized = function () { 
-    p5resize(p, 'Game'); 
-  };
-
-  p.mousePressed = function () { 
-    if (p5inCanvas(p)) {
-      swimmer.mousePressed(p);
-    }
-  };
-
-  p.mouseReleased = function () { 
-    if (p5inCanvas(p)) {
-      logdb("Game,pressed,"+p.mouseX+","+p.mouseY);
-      swimmer.mouseReleased(p); 
-    }
-  };
-
-  p.draw = function () {
-    swimmer.draw(p);
-  };
-};
-
 new p5(PegBoardCanvas);
-new p5(GameCanvas);
 </script>
 
 <input type="button" value="Click here when finished!" 
   style="background-color:#ffd179;" onclick="playMusic(this)"/>
+  <p>Before we begin, we'd like to show you how the task works. Click and drag the circles on the top, left and place them on a peg.</p>
 <div class="float-container">
-  <div class="float-child"> <div id="PegBoard"></div></div>
-  <div class="float-child"> <div id="Game"></div></div>
+  <div class="float-child"> <div id="PegBoardTutorial"></div></div>
 </div>
 </body>
 </html>

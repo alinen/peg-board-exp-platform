@@ -55,7 +55,15 @@ def new():
   db.session.add(user)
   db.session.commit()
 
-  return render_template("PegExperiment.html", experiment_pid=user.id) 
+  return render_template("welcome.html", experiment_pid=user.id) 
+
+@app.route('/tutorialpeg', methods=['GET'])
+def tutorialpeg():
+  return render_template("tutorial-peg.html") 
+
+@app.route('/tutorialgame', methods=['GET'])
+def tutorialgame():
+  return render_template("tutorial-swimmer.html") 
 
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
@@ -64,7 +72,7 @@ def thankyou():
 @app.route('/results', methods=['GET'])
 def results():
   if not ExperimentLog.__table__.exists(db.engine):
-    print "Experiment log is empty"
+    print("Experiment log is empty")
     return make_response(jsonify({'error': 'Not found'}), 404)
 
   participants = Participant.query.all()
