@@ -55,7 +55,7 @@ def new():
   db.session.add(user)
   db.session.commit()
 
-  return render_template("welcome.html", experiment_pid=user.id) 
+  return render_template("PegExperiment.html", experiment_pid=user.id) 
 
 @app.route('/tutorialpeg', methods=['GET'])
 def tutorialpeg():
