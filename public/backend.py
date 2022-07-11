@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 from flask import Flask, send_from_directory, make_response, jsonify, request, render_template
-from flask_httpauth import HTTPTokenAuth
 from flask_sqlalchemy import SQLAlchemy
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -20,22 +19,11 @@ except:
   pass
   
 app = Flask(__name__)
-auth = HTTPTokenAuth(scheme='Bearer')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 from models import *
-
-@auth.verify_token
-def verify_token(token):
-  if token == password:
-    return "experimenter"
-
-@app.route('/hello')
-@auth.login_required
-def hello():
-  return "Hello, {}!".format(auth.current_user())
 
 @app.route('/')
 def index():
