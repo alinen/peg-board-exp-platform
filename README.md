@@ -25,4 +25,15 @@ $ cd public
 $ python3 backend.py
 ```
 
+Then using your browser, navigate to `127.0.0.1:5000`. 
 
+## Tutorials
+
+The task and game modes can be played independently as part of an introductory tutorial.
+
+* Peg board tutorial: In your browser, navigate to `http://127.0.0.1:5000/tutorialpeg` 
+* Swimmer game tutorial: In your browser, navigate to `http://127.0.0.1:5000/tutorialgame` 
+
+## Working with logs
+
+To preview the logs for the experiment, navigate to `http://127.0.0.1:5000/results`.
