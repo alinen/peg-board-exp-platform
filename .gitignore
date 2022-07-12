@@ -1,6 +1,8 @@
+clicks-*
 .DS_Store
 ~*
 *~
+*.swo
 *.swp
 password.txt
 *.pyc
