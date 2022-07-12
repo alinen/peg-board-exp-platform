@@ -69,7 +69,7 @@ var swimmer  = new Swimmer();
 var GameCanvas = function (p) {
   p.setup = function () { 
     p5setup(p, 'Game'); 
-    swimmer.setup(p);
+    swimmer.setup(p, null);
   };
 
   p.windowResized = function () { 

@@ -67,7 +67,7 @@ var pegBoardGame = new PegBoard();
 var PegBoardCanvas = function (p) {
   p.setup = function () { 
     p5setup(p, 'PegBoardTutorial'); 
-    pegBoardGame.setup(p); 
+    pegBoardGame.setup(p, null); 
   };
 
   p.windowResized = function () { 
