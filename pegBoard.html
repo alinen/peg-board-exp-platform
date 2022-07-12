@@ -12,9 +12,13 @@ var graphics = function(p) {
   p.setup = function() { 
     var canvas = p.createCanvas(500,500); 
     canvas.parent("PegBoard"); 
-    pegBoard.setup(p, 15);
+    pegBoard.setup(p, null);
   }
 
+
+  p.touchStarted = function() {
+    pegBoard.mousePressed(p);
+  }
 
   p.mousePressed = function() {
     pegBoard.mousePressed(p);
