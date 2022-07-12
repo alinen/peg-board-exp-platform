@@ -20,7 +20,7 @@ class Star {
     var dsqr = (player.x - this.x) * (player.x - this.x) +
         (player.y - this.y) * (player.y - this.y);
 
-        console.log(rsqr + " " + dsqr);
+    //console.log(rsqr + " " + dsqr);
     if (dsqr <= rsqr) {
       return true;
     }
