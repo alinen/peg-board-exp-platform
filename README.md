@@ -2,10 +2,10 @@
 
 Task and game for an experiment investigating task perseverance in children.
 
-* [Click here to play the application (no recording).](https://alinen.github.io/peg-board-exp-platform/)
-* [Click here to play the swimmer game (no recording).](https://alinen.github.io/peg-board-exp-platform/swimmer.html)
-* [Click here to play the peg task (no recording).](https://alinen.github.io/peg-board-exp-platform/pegBoard.html)
-* [Click here to play the runner game (no recording).](https://alinen.github.io/peg-board-exp-platform/runner.html)
+* [Click here to demo the experiment.](https://alinen.github.io/peg-board-exp-platform/)
+* [Click here to demo the swimmer game.](https://alinen.github.io/peg-board-exp-platform/swimmer.html)
+* [Click here to demo the peg task.](https://alinen.github.io/peg-board-exp-platform/pegBoard.html)
+* [Click here to demo the runner game.](https://alinen.github.io/peg-board-exp-platform/runner.html)
 
 https://user-images.githubusercontent.com/259657/178350899-fcd7376d-1a57-41a1-92b4-c776520a6b9d.mp4
 
