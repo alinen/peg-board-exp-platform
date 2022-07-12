@@ -220,10 +220,10 @@ class PegBoard {
 
         if(this.pegs[i][j].clickCount < 4){
           this.pegs[i][j].clickCount = this.pegs[i][j].clickCount + 1;
-        }
-        if(this.pegs[i][j].clickCount == 4) {
-          if (this.logfn) {
-            this.logfn("PegBoard,peglock,"+i+","+j);
+          if(this.pegs[i][j].clickCount == 4) {
+            if (this.logfn) {
+              this.logfn("PegBoard,peglock,"+i+","+j);
+            }
           }
         }
       }
