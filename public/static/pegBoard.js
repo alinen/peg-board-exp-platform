@@ -98,7 +98,7 @@ class PegBoard {
     }
 
     if (total == this.numPegs*this.numPegs - 3 ) {
-      console.log("COMPLETE!!!!");
+      //console.log("COMPLETE!!!!");
       this.doClear = true;
       this.clearTimer = p.millis();
     }
@@ -130,7 +130,7 @@ class PegBoard {
     var factor = (p.millis() - this.clearTimer)/3000.0 + 0.1;
     var radi = this.rad * factor;
     var c = p.lerpColor(p.color(0), p.color("#fff8dc"), factor/2.0);
-    console.log(c);
+    //console.log(c);
     p.fill(c);
     for(let i = 0; i < this.numPegs; i++){
       for(let j = 0; j < this.numPegs; j++) {
@@ -202,8 +202,12 @@ class PegBoard {
     let i = p.floor(p.mouseX / this.spacing);
     let j = p.floor(p.mouseY / this.spacing);
 
+    if (i < 0 || i > this.pegs.length-1 || j < 0 || j > this.pegs.length-1) {
+      return; // mouse press out of bounds
+    }
+
     if (p.dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
-      console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
+      //console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
       if (this.isDragging && !this.pegs[i][j].filled) {
         this.pegs[i][j].filled = true;
         this.pegs[i][j].coloring = this.currentColor;
