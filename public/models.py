@@ -40,11 +40,11 @@ class ExperimentLog(db.Model):
        return json
 
    def load(self, json):
-       if json.has_key('pid'):
+       if 'pid' in json:
           self.pid = json['pid']
 
-       if json.has_key('time'):
+       if 'time' in json:
           self.secs = json['time']
 
-       if json.has_key('logLine'):
+       if 'logLine' in json:
           self.logLine = json['logLine']
