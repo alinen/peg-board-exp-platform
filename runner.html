@@ -17,6 +17,10 @@ var graphics = function(p) {
     runner.setup(p);
   }
 
+  p.touchStarted = function() {
+    runner.mousePressed(p);
+  }
+
   p.mousePressed = function() {
     runner.mousePressed(p);
   }
