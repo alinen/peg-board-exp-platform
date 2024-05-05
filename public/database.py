@@ -1,87 +1,96 @@
 #! /bin/python
 
-from models import *
-from flask_sqlalchemy import SQLAlchemy
+from backend import app, db, Participant, ExperimentLog
 import datetime
 
-def InitDatabase(db):
-    db.create_all()
-
 def ClearDatabase(db):
-    db.drop_all()
+    with app_context():
+       db.session.query(Participant).delete()
+       db.session.commit()
 
-def ClearExperimentLog(db):
-    if ExperimentLog.__table__.exists(db.engine):
-       ExperimentLog.__table__.drop(db.engine)
-    ExperimentLog.__table__.create(db.engine)
+       db.session.query(ExperimentLog).delete()
+       db.session.commit()
 
 def ListParticipantLog(db, pid):
-    if not ExperimentLog.__table__.exists(db.engine):
-        print("Experiment log is empty")
-        return
-    logLines = ExperimentLog.query.filter(ExperimentLog.pid == pid).order_by(ExperimentLog.secs)
+    with app.app_context():
+      query = db.session.query(ExperimentLog).filter(ExperimentLog.pid == pid).order_by(ExperimentLog.secs)
+      logLines = query.all()
+      return logLines
+    return []
+
+def PrintParticipantLog(db, pid):
+    logLines = ListParticipantLog(db, pid)
+    if len(logLines) == 0:
+      print("Experiment log is empty")
+
     for line in logLines:
-        print(line)
+      print(line)
 
 def ListExperimentLog(db):
-    if not ExperimentLog.__table__.exists(db.engine):
-        print("Experiment log is empty")
-        return
-    logLines = ExperimentLog.query.all()
+    with app.app_context():
+      logLines = db.session.query(ExperimentLog).all()
+      return logLines
+    return []
+
+def PrintExperimentLog(db):
+    logLines = ListExperimentLog(db)
+    if len(logLines) == 0:
+      print("Experiment log is empty")
     for line in logLines:
-        print(line)
+      print(line)
 
 def ListParticipants(db):
-    if not Participant.__table__.exists(db.engine):
-        print("Participants log is empty")
-        return
-    logLines = Participant.query.all()
+    with app.app_context():
+      logLines = db.session.query(Participant).all()
+      return logLines
+    return []
+
+def PrintParticipants(db):
+    logLines = ListParticipants(db)
+    if len(logLines) == 0:
+      print("Participant log is empty")
     for line in logLines:
-        print(line)
+      print(line)
 
-def export(db):
-    if not ExperimentLog.__table__.exists(db.engine):
-       print("Experiment log is empty")
-       return
+def Export(db):
 
-    participants = Participant.query.all()
-    date = datetime.datetime.now().strftime("%m%d%Y-%H%M%S")
-    filename = "clicks-%s.csv"%str(date)
-    fp = open(filename, "w")
-    for p in participants:
-       logLines = ExperimentLog.query.filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
-       for x in logLines:
-           fp.writelines("%s,%s,%s,%f,%s\n"%(x.pid, p.name, str(p.created), x.secs, x.logLine))
-    fp.close()
-    print("Wrote file:", filename)
+    with app.app_context():
+       participants = db.session.query(Participant).all()
+       date = datetime.datetime.now().strftime("%m%d%Y-%H%M%S")
+       filename = "clicks-%s.csv"%str(date)
+       fp = open(filename, "w")
+       for p in participants:
+          logLines = ExperimentLog.query.filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
+          for x in logLines:
+              fp.writelines("%s,%s,%s,%f,%s\n"%(x.pid, p.name, str(p.created), x.secs, x.logLine))
+       fp.close()
+       print("Wrote file:", filename)
 
 def help():
     print("Enter commands: logs, ids, clear, <pid>, help, export, quit") 
 
 if __name__ == '__main__':
-    from backend import db
-
     help()
     done = False
     while (not done):
         cmd = input("Enter a command: ")
         if cmd == "logs":
-           ListExperimentLog(db) 
+           PrintExperimentLog(db) 
         elif cmd == "ids":
-           ListParticipants(db)
+           PrintParticipants(db)
         elif cmd == "clear":
            ClearDatabase(db)
         elif cmd == "export":
-            export(db)
+           Export(db)
         elif cmd == "help":
-            help()
+           Help()
         elif cmd == "quit":
-            done = True
+           done = True
         else:
-            try:
-                pid = int(cmd)
-                ListParticipantLog(db, pid)
-            except:
-                print(pid, "not found")
-                pass
+           try:
+              pid = int(cmd)
+              PrintParticipantLog(db, pid)
+           except:
+              print(pid, "not found")
+              pass
 

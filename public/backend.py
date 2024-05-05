@@ -1,29 +1,95 @@
-import os
+import os, sys
 from datetime import datetime
 from flask import Flask, send_from_directory, make_response, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-password = 'secret-token-1'
-try:
-  f = open(os.path.join(basedir, 'password.txt'), 'r')
-  password = f.readline()
-except:
-  pass
-
-url = 'sqlite:///'+ os.path.join(basedir, 'experiment.sqlite')
-try:
-  f = open(os.path.join(basedir, 'database_uri.txt'), 'r') # allow override
-  url = f.readline()
-except:
-  pass
-  
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or url
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-from models import *
+dbfilename = 'experiment.sqlite'
+if len(sys.argv) == 2:
+    dbfilename = sys.argv[1]
+
+def InitDatabase(app, dbfilename):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    password = 'secret-token-1'
+    try:
+      f = open(os.path.join(basedir, 'password.txt'), 'r')
+      password = f.readline().strip()
+    except:
+      pass
+    
+    url = 'sqlite:///'+ os.path.join(basedir, dbfilename)
+    try:
+      f = open(os.path.join(basedir, 'database_uri.txt'), 'r') # allow override
+      url = f.readline()
+    except:
+      pass
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    return password
+
+class Base(DeclarativeBase):
+  pass
+
+db = SQLAlchemy(model_class=Base)
+
+class Participant(db.Model):
+   __tablename__ = 'Participants'
+   id = db.Column(db.Integer, primary_key=True)
+   created = db.Column(db.DateTime)
+   name = db.Column(db.String)
+
+   def __repr__(self):
+       createdStr = self.created.strftime("%m/%d/%Y %H:%M:%S.%f")
+       return "Participant %d (%s, %s)"%(self.id, self.name, createdStr)
+
+   def props(self):
+       json = {}
+       json['id'] = self.id
+       json['name'] = self.name
+       json['created'] = self.created
+       return json
+
+   def load(self, json):
+       pass
+
+class ExperimentLog(db.Model):
+   __tablename__ = 'ExperimentLog'
+   id = db.Column(db.Integer, primary_key=True)
+   pid = db.Column(db.Integer) # participant id (0 -> test participant)
+   secs = db.Column(db.Float) # simulation time (in seconds)
+   logLine = db.Column(db.Text) # Is this long enough? sqlite has no max length?
+
+   def __repr__(self):
+       return "%d) PID: %d (%.2f) %s"%(self.id, self.pid, self.secs, self.logLine)
+
+   def props(self):
+       json = {}
+       json['id'] = self.id
+       json['pid'] = self.pid
+       json['time'] = self.secs
+       json['logLine'] = self.logLine
+       return json
+
+   def load(self, json):
+       if 'pid' in json:
+          self.pid = json['pid']
+
+       if 'time' in json:
+          self.secs = json['time']
+
+       if 'logLine' in json:
+          self.logLine = json['logLine']
+
+
+app = Flask(__name__)
+password = InitDatabase(app, dbfilename)
+
+db.init_app(app)
+with app.app_context():
+  db.create_all()
 
 @app.route('/')
 def index():
@@ -31,11 +97,8 @@ def index():
 
 @app.route('/new', methods=['GET', 'POST'])
 def new():
-  if not Participant.__table__.exists(db.engine):
-    Participant.__table__.create(db.engine)
-
   expid = request.form.get('expid')
-  #print("new", expid, request.data, request.form)
+  print("new", expid, request.data, request.form)
 
   user = Participant()
   user.created = datetime.now()
@@ -59,15 +122,19 @@ def thankyou():
 
 @app.route('/results', methods=['GET'])
 def results():
-  if not ExperimentLog.__table__.exists(db.engine):
-    print("Experiment log is empty")
-    return make_response(jsonify({'error': 'Not found'}), 404)
 
-  participants = Participant.query.all()
   lines = []
-  for p in participants:
-    logLines = ExperimentLog.query.filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
-    lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
+  count = 0
+  with app.app_context():
+    participants = db.session.query(Participant).all()
+    for p in participants:
+
+       query = db.session.query(ExperimentLog).filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
+       logLines = query.all()
+       lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
+       count = count + 1
+       if count == 100:
+           break
 
   #logLines = ExperimentLog.query.order_by(ExperimentLog.pid, ExperimentLog.secs).all()
   #print(type(logLines), type(logLines[0]))
@@ -78,9 +145,6 @@ def log():
   print(request.json)
   if not request.json or not 'logLine' in request.json:
     abort(404)
-
-  if not ExperimentLog.__table__.exists(db.engine):
-    ExperimentLog.__table__.create(db.engine)
 
   exp = ExperimentLog()
   exp.load(request.json)
