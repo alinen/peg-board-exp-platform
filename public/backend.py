@@ -2,6 +2,7 @@ import os, sys
 from datetime import datetime
 from flask import Flask, send_from_directory, make_response, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_httpauth import HTTPTokenAuth
 from sqlalchemy.orm import DeclarativeBase
 
 app = Flask(__name__)
@@ -91,6 +92,12 @@ db.init_app(app)
 with app.app_context():
   db.create_all()
 
+auth = HTTPTokenAuth(scheme='Bearer')
+@auth.verify_token
+def verify_token(token):
+  if token == password:
+    return "experimenter"
+
 @app.route('/')
 def index():
   return render_template("start.html") 
@@ -98,15 +105,18 @@ def index():
 @app.route('/new', methods=['GET', 'POST'])
 def new():
   expid = request.form.get('expid')
-  print("new", expid, request.data, request.form)
+  expkey = request.form.get('expkey')
+  #print("new", expid, expkey, request.data, request.form)
+  if expkey == password:
+    user = Participant()
+    user.created = datetime.now()
+    user.name = expid
+    db.session.add(user)
+    db.session.commit()
 
-  user = Participant()
-  user.created = datetime.now()
-  user.name = expid
-  db.session.add(user)
-  db.session.commit()
-
-  return render_template("PegExperiment.html", experiment_pid=user.id) 
+    return render_template("PegExperiment.html", experiment_pid=user.id, experiment_key=expkey) 
+  else:
+    return render_template("wrongkey.html") 
 
 @app.route('/tutorialpeg', methods=['GET'])
 def tutorialpeg():
@@ -120,29 +130,36 @@ def tutorialgame():
 def thankyou():
   return render_template("thankyou.html") 
 
-@app.route('/results', methods=['GET'])
+@app.route('/explogin')
+def explogin():
+  return render_template("explogin.html")
+
+@app.route('/results', methods=['GET', 'POST'])
 def results():
+  expkey = request.form.get('expkey')
+  if expkey != password:
+    return render_template("wrongkey.html") 
 
   lines = []
-  count = 0
   with app.app_context():
     participants = db.session.query(Participant).all()
+    numparticipants = len(participants)
+
     for p in participants:
+      query = db.session.query(ExperimentLog).filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
+      logLines = query.all()
+      numevents = len(logLines)
+      duration = 0
+      if len(logLines) > 1:
+        duration = logLines[-1].secs - logLines[0].secs
+      lines.append([p.name, str(p.created), p.id, duration, numevents])
 
-       query = db.session.query(ExperimentLog).filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
-       logLines = query.all()
-       lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
-       count = count + 1
-       if count == 100:
-           break
-
-  #logLines = ExperimentLog.query.order_by(ExperimentLog.pid, ExperimentLog.secs).all()
-  #print(type(logLines), type(logLines[0]))
-  return render_template("results.html", lines = lines)
+  return render_template("results.html", numparticipants = numparticipants, lines = lines)
 
 @app.route('/log', methods=['PUT','POST'])
+@auth.login_required
 def log():
-  print(request.json)
+  #print(request.json)
   if not request.json or not 'logLine' in request.json:
     abort(404)
 

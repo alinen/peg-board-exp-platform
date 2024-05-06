@@ -35,18 +35,25 @@ function download() {
 <h1>Result Summary</h1>
 
 <input type="button" value="Download" style="background-color:#ffd179" onclick="download()">
-
+<h3>Total participants: {{numparticipants}}</h3>
 <h3>Log</h3>
 {% if lines|length > 0 %}
 <table id="results" class="u-full-width">
   <tbody>
-    {% for name,created,pid,secs,line in lines %}
     <tr>
-      <td>{{pid}}</td>
+      <td>ID</td>
+      <td>Exp ID</td>
+      <td>Created</td>
+      <td>Duration</td>
+      <td>Total events</td>
+    </tr>
+    {% for name,created,id,duration,events in lines %}
+    <tr>
+      <td>{{id}}</td>
       <td>{{name}}</td>
       <td>{{created}}</td>
-      <td>{{secs}}</td>
-      <td>{{line}}</td>
+      <td>{{duration}}</td>
+      <td>{{events}}</td>
     </tr>
     {% endfor %}
   </tbody>
