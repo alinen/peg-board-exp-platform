@@ -30,8 +30,6 @@
 <body>
 
 <script language="javascript" type="text/javascript">
-var participantid = {{experiment_pid|safe}};
-var experimentkey = "{{experiment_key|safe}}";
 var timeStart = Date.now();
 
 function logdb(message) {
@@ -39,11 +37,11 @@ function logdb(message) {
   //console.log(message)
   let timeNow = Date.now();
   let timeSeconds =  (timeNow - timeStart)/ 1000;
-  let data = {pid: participantid, time: timeSeconds, logLine: message};
+  let data = {pid: 'Not Set', time: timeSeconds, logLine: message};
 
   fetch("/log", {
     method: "POST",
-    headers: {'Content-Type': 'application/json', 'Authorization' : 'Bearer ' + experimentkey}, 
+    headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify(data)
     }).then(res => {
       //console.log("Request complete! response:", res);

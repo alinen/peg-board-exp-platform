@@ -1,6 +1,6 @@
 import os, sys
 from datetime import datetime
-from flask import Flask, send_from_directory, make_response, jsonify, request, render_template
+from flask import Flask, send_from_directory, make_response, jsonify, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPTokenAuth
 from sqlalchemy.orm import DeclarativeBase
@@ -87,6 +87,7 @@ class ExperimentLog(db.Model):
 
 app = Flask(__name__)
 password = InitDatabase(app, dbfilename)
+app.secret_key = password
 
 db.init_app(app)
 with app.app_context():
@@ -113,8 +114,9 @@ def new():
     user.name = expid
     db.session.add(user)
     db.session.commit()
+    session['pid'] = user.id
 
-    return render_template("PegExperiment.html", experiment_pid=user.id, experiment_key=expkey) 
+    return render_template("PegExperiment.html") 
   else:
     return render_template("wrongkey.html") 
 
@@ -128,6 +130,7 @@ def tutorialgame():
 
 @app.route('/thankyou', methods=['GET'])
 def thankyou():
+  session.pop('pid')
   return render_template("thankyou.html") 
 
 @app.route('/explogin')
@@ -167,11 +170,17 @@ def results():
   return render_template("results.html", numparticipants = numparticipants, lines = lines, downloadcontent = csv)
 
 @app.route('/log', methods=['PUT','POST'])
-@auth.login_required
 def log():
-  #print(request.json)
+  pid = session.get('pid')
+  if pid is None:
+    abort(404)
+
   if not request.json or not 'logLine' in request.json:
     abort(404)
+
+  print("session", pid)
+  request.json['pid'] = pid # Use session pid for log
+  print("session", request.json['logLine'])
 
   exp = ExperimentLog()
   exp.load(request.json)
