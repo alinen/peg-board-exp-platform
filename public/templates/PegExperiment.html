@@ -33,8 +33,6 @@
 var timeStart = Date.now();
 
 function logdb(message) {
-  // TODO: Salt experimentkey?
-  //console.log(message)
   let timeNow = Date.now();
   let timeSeconds =  (timeNow - timeStart)/ 1000;
   let data = {pid: 'Not Set', time: timeSeconds, logLine: message};

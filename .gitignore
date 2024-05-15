@@ -5,4 +5,6 @@ clicks-*
 *.swo
 *.swp
 password.txt
+password-exp.txt
+key.txt
 *.pyc

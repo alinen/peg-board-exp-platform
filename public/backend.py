@@ -1,4 +1,5 @@
-import os, sys
+import os, sys, csv
+from io import StringIO
 from datetime import datetime
 from flask import Flask, send_from_directory, make_response, jsonify, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +10,17 @@ app = Flask(__name__)
 
 dbfilename = 'experiment.sqlite'
 if len(sys.argv) == 2:
-    dbfilename = sys.argv[1]
+  dbfilename = sys.argv[1]
+
+def LoadKey(filename):
+  basedir = os.path.abspath(os.path.dirname(__file__))
+  password = 'secret-token'
+  try:
+    f = open(os.path.join(basedir, filename), 'r')
+    password = f.readline().strip()
+  except:
+    pass
+  return password
 
 def InitDatabase(app, dbfilename):
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -87,7 +98,8 @@ class ExperimentLog(db.Model):
 
 app = Flask(__name__)
 password = InitDatabase(app, dbfilename)
-app.secret_key = password
+expword = LoadKey('password-exp.txt')
+app.secret_key = LoadKey('key.txt')
 
 db.init_app(app)
 with app.app_context():
@@ -140,11 +152,12 @@ def explogin():
 @app.route('/results', methods=['GET', 'POST'])
 def results():
   expkey = request.form.get('expkey')
-  if expkey != password:
+  if expkey != expword:
     return render_template("wrongkey.html") 
 
+  session['experimentor'] = True
+
   lines = []
-  csv = ""
   with app.app_context():
     participants = db.session.query(Participant).all()
     numparticipants = len(participants)
@@ -158,29 +171,18 @@ def results():
         duration = logLines[-1].secs - logLines[0].secs
       lines.append([p.name, str(p.created), p.id, duration, numevents])
 
-      rawdata = [(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines]
-      for raw in rawdata:
-        line = str(raw[0]).replace(" ", "-") 
-        for i in range(1, len(raw)):
-          item = raw[i]
-          line += "," + str(item).replace(" ", "-") 
-        line += "<br>"
-        csv += line
-
-  return render_template("results.html", numparticipants = numparticipants, lines = lines, downloadcontent = csv)
+  return render_template("results.html", numparticipants = numparticipants, lines = lines)
 
 @app.route('/log', methods=['PUT','POST'])
 def log():
-  pid = session.get('pid')
-  if pid is None:
-    abort(404)
-
   if not request.json or not 'logLine' in request.json:
     abort(404)
 
-  print("session", pid)
-  request.json['pid'] = pid # Use session pid for log
-  print("session", request.json['logLine'])
+  pid = session.get('pid')
+  if pid is None:
+    return jsonify({}), 201 
+
+  request.json['pid'] = pid 
 
   exp = ExperimentLog()
   exp.load(request.json)
@@ -188,6 +190,26 @@ def log():
   db.session.commit()
 
   return jsonify(exp.props()), 201
+
+@app.route('/download', methods=['GET'])
+def download():
+  if session.get('experimentor') is None:
+    return render_template("wrongkey.html") 
+
+  participants = Participant.query.all()
+  lines = []
+  for p in participants:
+    logLines = ExperimentLog.query.filter(ExperimentLog.pid == p.id).order_by(ExperimentLog.secs)
+    lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
+
+  si = StringIO()
+  cw = csv.writer(si)
+  cw.writerows(lines)
+  output = make_response(si.getvalue())
+  filename = "clicks-" + str(datetime.now()) + ".csv";
+  output.headers["Content-Disposition"] = "attachment; filename=%s"%filename
+  output.headers["Content-type"] = "text/csv"
+  return output
 
 # Override this handler to send a JSON message rather than an HTML message
 @app.errorhandler(404)

@@ -10,20 +10,7 @@
 <body>
 <script>
 function download() {
-  var raw = "{{downloadcontent|safe}}";
-  var contents = raw.replaceAll("<br>","\n");
-  
-  var blob = new Blob([contents], {type: "text/csv;charset=utf-8"});
-  var a = document.createElement("a");
-  var url = URL.createObjectURL(blob);
-  a.href = url;
-  a.download = "clicks-"+Date()+".csv";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function() {
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-  }, 0);
+  window.location.href = "/download"
 }
 </script>
 <h1>Result Summary</h1>
