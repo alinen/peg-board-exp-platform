@@ -10,14 +10,17 @@
 <body>
 <script>
 function download() {
-  var contents = "";
-  var table = document.getElementById("results");
-  for (var i = 0, row; row = table.rows[i]; i++) {
-    for (var j = 0, col; col = row.cells[j]; j++) {
-      contents += col.innerHTML.replaceAll(" ","-") +",";
-    }  
-    contents += "\n";
-  }
+  var raw = "{{downloadcontent|safe}}";
+  var contents = raw.replaceAll("<br>","\n");
+  //console.log(contents);
+  //var contents = "";
+  //var table = document.getElementById("results");
+  //for (var i = 0, row; row = table.rows[i]; i++) {
+  //  for (var j = 0, col; col = row.cells[j]; j++) {
+  //    contents += col.innerHTML.replaceAll(" ","-") +",";
+  //  }  
+  //  contents += "\n";
+  //}
   
   var blob = new Blob([contents], {type: "text/csv;charset=utf-8"});
   var a = document.createElement("a");

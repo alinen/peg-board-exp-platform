@@ -141,6 +141,7 @@ def results():
     return render_template("wrongkey.html") 
 
   lines = []
+  csv = ""
   with app.app_context():
     participants = db.session.query(Participant).all()
     numparticipants = len(participants)
@@ -154,7 +155,16 @@ def results():
         duration = logLines[-1].secs - logLines[0].secs
       lines.append([p.name, str(p.created), p.id, duration, numevents])
 
-  return render_template("results.html", numparticipants = numparticipants, lines = lines)
+      rawdata = [(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines]
+      for raw in rawdata:
+        line = str(raw[0]).replace(" ", "-") 
+        for i in range(1, len(raw)):
+          item = raw[i]
+          line += "," + str(item).replace(" ", "-") 
+        line += "<br>"
+        csv += line
+
+  return render_template("results.html", numparticipants = numparticipants, lines = lines, downloadcontent = csv)
 
 @app.route('/log', methods=['PUT','POST'])
 @auth.login_required

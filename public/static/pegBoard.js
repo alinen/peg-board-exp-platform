@@ -46,6 +46,14 @@ class PegBoard {
         this.pegs[i][j] = new PegCell(p);
       }
     }
+    // first three pegs are filled with the pallet
+    this.pegs[0][0].filled = true;
+    this.pegs[1][0].filled = true;
+    this.pegs[2][0].filled = true;
+
+    this.pegs[0][0].clickCount = 4;
+    this.pegs[1][0].clickCount = 4;
+    this.pegs[2][0].clickCount = 4;
   }
 
   resize(p) {
@@ -206,7 +214,7 @@ class PegBoard {
       return; // mouse press out of bounds
     }
 
-    if (p.dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
+    //if (p.dist(celli, cellj, this.half, this.half) < this.pegSize/2) {
       //console.log(celli + " " + cellj + " " + this.numPegs + " " + i + " " + j);
       if (this.isDragging && !this.pegs[i][j].filled) {
         this.pegs[i][j].filled = true;
@@ -227,9 +235,8 @@ class PegBoard {
           }
         }
       }
-    }
+    //}
 
     this.isDragging = false;
   }
 }
-
