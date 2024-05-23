@@ -203,7 +203,7 @@ def download():
     lines.extend([(p.name, str(p.created), x.pid, x.secs, x.logLine) for x in logLines])
 
   si = StringIO()
-  cw = csv.writer(si)
+  cw = csv.writer(si, escapechar=' ', quoting=csv.QUOTE_NONE, delimiter=',')
   cw.writerows(lines)
   output = make_response(si.getvalue())
   filename = "clicks-" + str(datetime.now()) + ".csv";
